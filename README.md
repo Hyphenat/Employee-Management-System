@@ -53,4 +53,4 @@ This Employee Management System helps track employee records, departments, roles
 
 ## Author
 
-Created by [Your Name]
+Created by Farhan Sargath
