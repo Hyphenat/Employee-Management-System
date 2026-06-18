@@ -1,28 +1,185 @@
-﻿html
-@model EmployeeManagementSystem.Models.Employee
+﻿@model EmployeeManagementSystem.Models.Employee
 
 @{
     ViewData["Title"] = "My Profile";
 }
 
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="fw-bold"><i class="fas fa-user me-2"></i>My Profile</h2>
+            <a asp-controller="Employee" asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
 
+<div class="row">
+    <div class="col-lg-4 mb-4">
+        <!-- Profile Card -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+                <div class="avatar-lg bg-gradient-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center">
+                    <h1 class="mb-0">@Model.FirstName.Substring(0, 1)@Model.LastName.Substring(0, 1)</h1>
+                </div>
+                <h4 class="mb-1">@Model.FirstName @Model.LastName</h4>
+                <p class="text-muted mb-3">@Model.Position</p>
+                <div class="d-grid gap-2">
+                    <a asp-controller="Employee" asp-action="ChangePassword" class="btn btn-primary">
+                        <i class="fas fa-key me-2"></i>Change Password
+                    </a>
+                    <span class="badge @(Model.IsActive ? "bg-success" : "bg-danger") fs-6">
+                        @(Model.IsActive ? "Active" : "Inactive")
+                    </span>
+                </div>
+            </div>
+        </div>
 
-        My Profile
+        <!-- Quick Info Card -->
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header bg-gradient-info text-white">
+                <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Quick Information</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <p class="text-muted mb-1">Employee ID</p>
+                    <h6>#@Model.EmployeeId</h6>
+                </div>
+                <div class="mb-3">
+                    <p class="text-muted mb-1">Department</p>
+                    <h6>@Model.Department</h6>
+                </div>
+                <div class="mb-3">
+                    <p class="text-muted mb-1">Joining Date</p>
+                    <h6>@Model.JoiningDate.ToString("dd MMM yyyy")</h6>
+                </div>
+                <div class="mb-0">
+                    <p class="text-muted mb-1">Role</p>
+                    <h6><span class="badge bg-primary">@Model.Role</span></h6>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="col-lg-8">
+        <!-- Edit Profile Form -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-gradient-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Edit Profile</h5>
+            </div>
+            <div class="card-body p-4">
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <i class="fas fa-exclamation-triangle me-2"></i>@ViewBag.Error
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
 
+                <form asp-controller="Employee" asp-action="MyProfile" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="EmployeeId" />
+                    <input type="hidden" asp-for="FirstName" />
+                    <input type="hidden" asp-for="LastName" />
+                    <input type="hidden" asp-for="Password" />
+                    <input type="hidden" asp-for="Position" />
+                    <input type="hidden" asp-for="Department" />
+                    <input type="hidden" asp-for="BasicSalary" />
+                    <input type="hidden" asp-for="JoiningDate" />
+                    <input type="hidden" asp-for="Role" />
+                    <input type="hidden" asp-for="IsActive" />
+                    <input type="hidden" asp-for="CreatedDate" />
 
-@Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">
+                                <i class="fas fa-user me-2"></i>First Name
+                            </label>
+                            <input type="text" class="form-control" value="@Model.FirstName" disabled />
+                            <small class="text-muted">Contact admin to change</small>
+                        </div>
 
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">
+                                <i class="fas fa-user me-2"></i>Last Name
+                            </label>
+                            <input type="text" class="form-control" value="@Model.LastName" disabled />
+                            <small class="text-muted">Contact admin to change</small>
+                        </div>
+                    </div>
 
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="Email" class="form-label">
+                                <i class="fas fa-envelope me-2"></i>Email Address <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Email" type="email" class="form-control form-control-lg" required />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
 
-                Email
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="PhoneNumber" class="form-label">
+                                <i class="fas fa-phone me-2"></i>Phone Number <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="PhoneNumber" class="form-control form-control-lg" required />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
 
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">
+                                <i class="fas fa-briefcase me-2"></i>Position
+                            </label>
+                            <input type="text" class="form-control" value="@Model.Position" disabled />
+                        </div>
 
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">
+                                <i class="fas fa-building me-2"></i>Department
+                            </label>
+                            <input type="text" class="form-control" value="@Model.Department" disabled />
+                        </div>
+                    </div>
 
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">
+                                <i class="fas fa-money-bill-wave me-2"></i>Basic Salary
+                            </label>
+                            <input type="text" class="form-control" value="₹@Model.BasicSalary.ToString("N0")" disabled />
+                        </div>
 
-                Phone Number
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">
+                                <i class="fas fa-calendar me-2"></i>Joining Date
+                            </label>
+                            <input type="text" class="form-control" value="@Model.JoiningDate.ToString("dd MMM yyyy")" disabled />
+                        </div>
+                    </div>
 
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Note:</strong> You can only update your email and phone number. Contact admin for other changes.
+                    </div>
 
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a asp-controller="Employee" asp-action="Index" class="btn btn-secondary btn-lg">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-save me-2"></i>Update Profile
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-
-                Update Profile
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

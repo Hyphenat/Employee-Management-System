@@ -1,55 +1,329 @@
-﻿html
-@{
+﻿@{
     ViewData["Title"] = "Employee Dashboard";
 }
 
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold text-gradient">
+            <i class="fas fa-user-circle me-2"></i>Employee Dashboard
+        </h2>
+        <p class="text-muted">Welcome back, @ViewBag.UserName!</p>
+    </div>
+</div>
 
+<!-- Employee Profile Card -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm bg-gradient-primary text-white">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        <div class="avatar-lg bg-white text-primary rounded-circle mx-auto d-flex align-items-center justify-content-center">
+                            @ViewBag.Employee.FirstName.Substring(0, 1)@ViewBag.Employee.LastName.Substring(0, 1)
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <h3 class="mb-2">@ViewBag.Employee.FirstName @ViewBag.Employee.LastName</h3>
+                        <p class="mb-1"><i class="fas fa-briefcase me-2"></i>@ViewBag.Employee.Position</p>
+                        <p class="mb-1"><i class="fas fa-building me-2"></i>@ViewBag.Employee.Department</p>
+                        <p class="mb-0"><i class="fas fa-envelope me-2"></i>@ViewBag.Employee.Email</p>
+                    </div>
+                    <div class="col-md-5 text-md-end mt-3 mt-md-0">
+                        <p class="mb-2"><i class="fas fa-phone me-2"></i>@ViewBag.Employee.PhoneNumber</p>
+                        <p class="mb-2"><i class="fas fa-calendar me-2"></i>Joined: @ViewBag.Employee.JoiningDate.ToString("dd MMM yyyy")</p>
+                        <p class="mb-0"><i class="fas fa-money-bill-wave me-2"></i>Salary: ₹@ViewBag.Employee.BasicSalary.ToString("N0")</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- Statistics Cards -->
+<div class="row g-4 mb-4">
+    <!-- Today's Attendance -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm hover-card @(ViewBag.TodayAttendance != null ? "bg-gradient-success" : "bg-gradient-warning") text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 text-uppercase mb-2">Today's Status</h6>
+                        <h2 class="fw-bold mb-0">
+                            @if (ViewBag.TodayAttendance != null)
+                            {
+                                @ViewBag.TodayAttendance.Status
+                            }
+                            else
+                            {
+                                @:Not Marked
+                            }
+                        </h2>
+                    </div>
+                    <div class="icon-lg">
+                        <i class="fas fa-calendar-check fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            Employee Dashboard
+    <!-- This Month Present Days -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm hover-card bg-gradient-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 text-uppercase mb-2">Present Days</h6>
+                        <h2 class="fw-bold mb-0">@ViewBag.PresentDays / @ViewBag.TotalDays</h2>
+                    </div>
+                    <div class="icon-lg">
+                        <i class="fas fa-check-circle fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        Welcome, @ViewBag.UserName!
+    <!-- Absent Days -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm hover-card bg-gradient-danger text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 text-uppercase mb-2">Absent Days</h6>
+                        <h2 class="fw-bold mb-0">@ViewBag.AbsentDays</h2>
+                    </div>
+                    <div class="icon-lg">
+                        <i class="fas fa-times-circle fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Latest Payslip -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm hover-card bg-gradient-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 text-uppercase mb-2">Latest Salary</h6>
+                        <h2 class="fw-bold mb-0">
+                            @if (ViewBag.LatestPayslip != null)
+                            {
+                                @:₹@ViewBag.LatestPayslip.NetSalary.ToString("N0")
+                            }
+                            else
+                            {
+                                @:N/A
+                            }
+                        </h2>
+                    </div>
+                    <div class="icon-lg">
+                        <i class="fas fa-money-bill-wave fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- Quick Actions -->
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm hover-card h-100">
+            <div class="card-header bg-gradient-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-3">
+                    <a asp-controller="Employee" asp-action="MyProfile" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-user me-2"></i>View My Profile
+                    </a>
+                    <a asp-controller="Employee" asp-action="MyAttendance" class="btn btn-outline-success btn-lg">
+                        <i class="fas fa-calendar-check me-2"></i>View My Attendance
+                    </a>
+                    <a asp-controller="Employee" asp-action="MySalary" class="btn btn-outline-info btn-lg">
+                        <i class="fas fa-money-bill-wave me-2"></i>View My Salary
+                    </a>
+                    <a asp-controller="Employee" asp-action="SubmitFeedback" class="btn btn-outline-warning btn-lg">
+                        <i class="fas fa-comment me-2"></i>Submit Feedback
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="col-md-6">
+        <!-- Today's Attendance Detail -->
+        <div class="card border-0 shadow-sm hover-card h-100">
+            <div class="card-header bg-gradient-success text-white">
+                <h5 class="mb-0"><i class="fas fa-calendar-day me-2"></i>Today's Attendance</h5>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.TodayAttendance != null)
+                {
+                    var attendance = ViewBag.TodayAttendance;
+                    var checkInTime = DateTime.Today.Add(attendance.CheckInTime);
+                    var checkOutTime = attendance.CheckOutTime != null ? DateTime.Today.Add(attendance.CheckOutTime) : (DateTime?)null;
 
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <p class="text-muted mb-1">Date</p>
+                            <h6>@attendance.Date.ToString("dd MMM yyyy")</h6>
+                        </div>
+                        <div class="col-6">
+                            <p class="text-muted mb-1">Status</p>
+                            <h6>
+                                @if (attendance.Status == "Present")
+                                {
+                                    <span class="badge bg-success">@attendance.Status</span>
+                                }
+                                else if (attendance.Status == "Absent")
+                                {
+                                    <span class="badge bg-danger">@attendance.Status</span>
+                                }
+                                else if (attendance.Status == "Half-Day")
+                                {
+                                    <span class="badge bg-warning">@attendance.Status</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-info">@attendance.Status</span>
+                                }
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <p class="text-muted mb-1">Check In</p>
+                            <h6><i class="fas fa-sign-in-alt me-2 text-success"></i>@checkInTime.ToString("hh:mm tt")</h6>
+                        </div>
+                        <div class="col-6">
+                            <p class="text-muted mb-1">Check Out</p>
+                            <h6>
+                                @if (checkOutTime != null)
+                                {
+                                    <i class="fas fa-sign-out-alt me-2 text-danger"></i>@checkOutTime?.ToString("hh:mm tt")
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not checked out</span>
+                                }
+                            </h6>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(attendance.Remarks))
+                    {
+                        <div class="alert alert-info mb-0">
+                            <strong>Remarks:</strong> @attendance.Remarks
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <h5>No Attendance Marked Today</h5>
+                        <p class="text-muted mb-0">Your attendance for today hasn't been marked yet. Please contact admin.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- Latest Payslip Details -->
+@if (ViewBag.LatestPayslip != null)
+{
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-file-invoice-dollar me-2"></i>Latest Payslip - @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(ViewBag.LatestPayslip.Month) @ViewBag.LatestPayslip.Year</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3">
+                            <h6 class="text-muted mb-2">Basic Salary</h6>
+                            <h4 class="text-primary">₹@ViewBag.LatestPayslip.BasicSalary.ToString("N0")</h4>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <h6 class="text-muted mb-2">Bonus</h6>
+                            <h4 class="text-success">₹@ViewBag.LatestPayslip.Bonus.ToString("N0")</h4>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <h6 class="text-muted mb-2">Deductions</h6>
+                            <h4 class="text-danger">₹@ViewBag.LatestPayslip.Deductions.ToString("N0")</h4>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <h6 class="text-muted mb-2">Net Salary</h6>
+                            <h4 class="text-info">₹@ViewBag.LatestPayslip.NetSalary.ToString("N0")</h4>
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <a asp-controller="Payslip" asp-action="ViewPayslip" asp-route-id="@ViewBag.LatestPayslip.PayslipId" class="btn btn-info text-white">
+                            <i class="fas fa-eye me-2"></i>View Full Payslip
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
-
-                My Profile
-
-
-                View Profile
-
-
-
-
-
-
-
-                My Salary
-
-
-                View Salary
-
-
-
-
-
-
-
-                My Attendance
-
-
-                View Attendance
-
-
-
-
-
-
-
-                Feedback
-
-
-                Submit Feedback
+<!-- Attendance Chart (This Month) -->
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-gradient-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>This Month's Attendance Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-success bg-opacity-10">
+                            <div class="card-body">
+                                <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                                <h3 class="text-success mb-1">@ViewBag.PresentDays</h3>
+                                <p class="text-muted mb-0">Present Days</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-danger bg-opacity-10">
+                            <div class="card-body">
+                                <i class="fas fa-times-circle fa-2x text-danger mb-2"></i>
+                                <h3 class="text-danger mb-1">@ViewBag.AbsentDays</h3>
+                                <p class="text-muted mb-0">Absent Days</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-info bg-opacity-10">
+                            <div class="card-body">
+                                <i class="fas fa-calendar-alt fa-2x text-info mb-2"></i>
+                                <h3 class="text-info mb-1">@ViewBag.TotalDays</h3>
+                                <p class="text-muted mb-0">Working Days</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-primary bg-opacity-10">
+                            <div class="card-body">
+                                <i class="fas fa-percentage fa-2x text-primary mb-2"></i>
+                                <h3 class="text-primary mb-1">@((ViewBag.TotalDays > 0 ? Math.Round((decimal)ViewBag.PresentDays / ViewBag.TotalDays * 100, 1) : 0))%</h3>
+                                <p class="text-muted mb-0">Attendance Rate</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <a asp-controller="Employee" asp-action="MyAttendance" class="btn btn-primary">
+                        <i class="fas fa-chart-line me-2"></i>View Detailed Attendance
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
